@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "610889776227",
+    "project_id": "lemarirapi-aee5e",
+    "storage_bucket": "lemarirapi-aee5e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:610889776227:android:2ed9022a58592f708c4c56",
+        "android_client_info": {
+          "package_name": "com.example.lemarirapi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "610889776227-5q1u28o23g07oop5g54p9naehs1065hd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAN7RCO4s5rN8S_MHEZIWnHo4SfIxxgJ2k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "610889776227-5q1u28o23g07oop5g54p9naehs1065hd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
