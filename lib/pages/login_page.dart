@@ -1,5 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:lemarirapi/util/jarak_widget.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:lemarirapi/auth.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -11,6 +15,22 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
+
+  String? errorMessage = '';
+
+  Future<void> signInWithEmailAndPassword() async {
+    try {
+      await Auth().signInWithEmailAndPassword(
+        email: _controllerEmail.text,
+        password: _controllerPassword.text,
+      );
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        errorMessage = e.message;
+        log(errorMessage.toString());
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +95,11 @@ class _LoginPageState extends State<LoginPage> {
                         )),
                   ),
                   mediumVerticalGap,
-                  SizedBox(height: 54.0, child: tombolPilihan("Login", () {})),
+                  SizedBox(
+                      height: 54.0,
+                      child: tombolPilihan("Login", () async {
+                        await signInWithEmailAndPassword();
+                      })),
                   smallVerticalGap,
                   TextButton(
                       onPressed: () {
@@ -90,23 +114,25 @@ class _LoginPageState extends State<LoginPage> {
                             fontSize: 14.0,
                             fontWeight: FontWeight.w500),
                       )),
-                  TextButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/sendverif');
-                      },
-                      child: const Text(
-                        "Verifikasi Email Ulang",
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontFamily: "poppins",
-                            fontSize: 14.0,
-                            fontWeight: FontWeight.w500),
-                      )),
+                  smallVerticalGap,
+                  Text('$errorMessage',
+                      style: const TextStyle(
+                          color: Colors.red,
+                          fontFamily: "poppins",
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.w500))
                 ],
               )),
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _controllerEmail.dispose();
+    _controllerPassword.dispose();
+    super.dispose();
   }
 }
 

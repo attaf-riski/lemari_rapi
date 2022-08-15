@@ -5,3 +5,5 @@ Widget smallVerticalGap = const SizedBox(
 );
 
 Widget mediumVerticalGap = const SizedBox(height: 30.0);
+
+Widget largeVerticalGap = const SizedBox(height: 50.0);

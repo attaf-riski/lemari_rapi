@@ -1,9 +1,32 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:lemarirapi/auth.dart';
 import 'package:lemarirapi/util/jarak_widget.dart';
 
-class SendVerification extends StatelessWidget {
-  SendVerification({Key? key}) : super(key: key);
-  final TextEditingController _controller = new TextEditingController();
+class SendVerification extends StatefulWidget {
+  const SendVerification({Key? key}) : super(key: key);
+
+  @override
+  State<SendVerification> createState() => _SendVerificationState();
+}
+
+class _SendVerificationState extends State<SendVerification> {
+  final TextEditingController _controller = TextEditingController();
+
+  String? errorMessage = '';
+
+  Future<void> sendEmailVerification() async {
+    try {
+      await Auth().sendEmailVerification(
+        email: _controller.text,
+      );
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        errorMessage = e.message;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,7 +46,7 @@ class SendVerification extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text(
-                      "Kirim Verifikasi",
+                      "Email Belum di Verifikasi",
                       style: TextStyle(
                           fontFamily: "poppins",
                           fontSize: 20.0,
@@ -32,7 +55,7 @@ class SendVerification extends StatelessWidget {
                     ),
                     smallVerticalGap,
                     const Text(
-                      "Sebenarnya kami telah kirim pesan verifikasi ke email kamu, tapi semisal belum ada juga silahkan kirim ulang.",
+                      "Silahkan verifikasi email anda agar dapat menggunakan lemari rapi. Silahkan cek di kotak email anda.",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           fontFamily: "poppins",
@@ -41,29 +64,15 @@ class SendVerification extends StatelessWidget {
                           color: Colors.white),
                     ),
                     mediumVerticalGap,
-                    InputLogin(
-                        controller: _controller,
-                        hintText: "email",
-                        isPassword: false),
-                    mediumVerticalGap,
                     SizedBox(
                       height: 54.0,
-                      child: tombolPilihan("Kirim ulang", () {}),
+                      child: tombolPilihan("Kirim ulang", () async {
+                        await sendEmailVerification();
+                        await Auth().currentUser?.reload();
+                      }),
                     ),
                   ],
                 )),
-            Align(
-              alignment: Alignment.topLeft,
-              child: IconButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  icon: const Icon(
-                    Icons.arrow_back_rounded,
-                    color: Colors.white,
-                    size: 50.0,
-                  )),
-            ),
           ],
         ),
       ),

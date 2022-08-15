@@ -1,9 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:lemarirapi/util/jarak_widget.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:lemarirapi/auth.dart';
 
-class ForgetPassword extends StatelessWidget {
-  ForgetPassword({Key? key}) : super(key: key);
-  final TextEditingController _controller = new TextEditingController();
+class ForgetPassword extends StatefulWidget {
+  const ForgetPassword({Key? key}) : super(key: key);
+
+  @override
+  State<ForgetPassword> createState() => _ForgetPasswordState();
+}
+
+class _ForgetPasswordState extends State<ForgetPassword> {
+  final TextEditingController _controller = TextEditingController();
+
+  String? errorMessage = '';
+
+  Future<void> sendResetPassword() async {
+    try {
+      await Auth().sendResetPassword(
+        email: _controller.text,
+      );
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        errorMessage = e.message;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,7 +55,7 @@ class ForgetPassword extends StatelessWidget {
                     ),
                     smallVerticalGap,
                     const Text(
-                      "Tenang, kami akan kirimkan ke email kamu yang telah terdaftar.",
+                      "Tenang, kami akan kirimkan link reset password ke email kamu yang telah terdaftar.",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           fontFamily: "poppins",
@@ -48,7 +71,9 @@ class ForgetPassword extends StatelessWidget {
                     mediumVerticalGap,
                     SizedBox(
                       height: 54.0,
-                      child: tombolPilihan("Kirim Pesan", () {}),
+                      child: tombolPilihan("Kirim Link", () async {
+                        await sendResetPassword();
+                      }),
                     ),
                   ],
                 )),
