@@ -1,5 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:lemarirapi/auth.dart';
+import 'package:lemarirapi/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lemarirapi/pages/intro_page.dart';
 import 'package:lemarirapi/pages/login_page.dart';
@@ -22,7 +21,6 @@ class _WidgetTreeState extends State<WidgetTree> {
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshotFuture) {
           return (snapshotFuture.hasData)
               ? StreamBuilder(
-                  initialData: User,
                   stream: Auth().authStateChanges,
                   builder: (context, snapshotStream) {
                     if (snapshotStream.hasData) {

@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:lemarirapi/auth.dart';
+import 'package:lemarirapi/services/auth.dart';
 import 'package:lemarirapi/util/jarak_widget.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -20,10 +20,17 @@ class _RegisterPageState extends State<RegisterPage> {
 
   Future<void> createUserWithEmailAndPassword() async {
     try {
-      await Auth().createUserWithEmailAndPassword(
+      await Auth()
+          .createUserWithEmailAndPassword(
         email: _controllerEmail.text,
         password: _controllerPassword.text,
-      );
+      )
+          .then((value) {
+        setState(() {
+          errorMessage = "Daftar berhasil, silahkan login.";
+        });
+      });
+      await Auth().currentUser?.reload();
     } on FirebaseAuthException catch (e) {
       setState(() {
         errorMessage = e.message;
@@ -97,8 +104,10 @@ class _RegisterPageState extends State<RegisterPage> {
                       height: 54.0,
                       child: tombolPilihan("Register", () async {
                         // setelah membuat user baru maka kirimkan email verifikasi
-                        await createUserWithEmailAndPassword().then(
-                            (value) async => await sendEmailVerification());
+                        await createUserWithEmailAndPassword().then((value) {
+                          Navigator.pushNamedAndRemoveUntil(
+                              context, '/', (route) => false);
+                        });
                       })),
                   smallVerticalGap,
                   TextButton(

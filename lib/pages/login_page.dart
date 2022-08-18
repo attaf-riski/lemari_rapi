@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:lemarirapi/util/jarak_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:lemarirapi/auth.dart';
+import 'package:lemarirapi/services/auth.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -20,14 +20,19 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> signInWithEmailAndPassword() async {
     try {
-      await Auth().signInWithEmailAndPassword(
+      await Auth()
+          .signInWithEmailAndPassword(
         email: _controllerEmail.text,
         password: _controllerPassword.text,
-      );
+      )
+          .then((value) {
+        setState(() {
+          errorMessage = '';
+        });
+      });
     } on FirebaseAuthException catch (e) {
       setState(() {
         errorMessage = e.message;
-        log(errorMessage.toString());
       });
     }
   }
@@ -98,7 +103,12 @@ class _LoginPageState extends State<LoginPage> {
                   SizedBox(
                       height: 54.0,
                       child: tombolPilihan("Login", () async {
-                        await signInWithEmailAndPassword();
+                        await signInWithEmailAndPassword().then((value) {
+                          if (errorMessage == '') {
+                            Navigator.pushNamedAndRemoveUntil(
+                                context, '/', (route) => false);
+                          }
+                        });
                       })),
                   smallVerticalGap,
                   TextButton(

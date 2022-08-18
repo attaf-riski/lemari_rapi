@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:lemarirapi/pages/home/add_page.dart';
 import 'package:lemarirapi/pages/home/profile_page.dart';
+import 'package:lemarirapi/pages/home/wardrobe_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -12,15 +14,9 @@ class _HomePageState extends State<HomePage> {
   int currentIndex = 0;
 
   final List<Widget> _pages = <Widget>[
-    const Icon(
-      Icons.call,
-      size: 150,
-    ),
-    const Icon(
-      Icons.camera,
-      size: 150,
-    ),
-    ProfilePage()
+    const WardrobePage(),
+    const AddClothe(),
+    const ProfilePage()
   ];
 
   @override
@@ -29,7 +25,10 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: const Text("Lemari Rapi"),
       ),
-      body: _pages.elementAt(currentIndex),
+      body: IndexedStack(
+        index: currentIndex,
+        children: _pages,
+      ),
       bottomNavigationBar: BottomNavigationBar(
           iconSize: 30,
           backgroundColor: Colors.blue,

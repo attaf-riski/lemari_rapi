@@ -1,32 +1,18 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:lemarirapi/services/auth.dart';
+import 'package:lemarirapi/services/firestore_services.dart';
 import 'package:lemarirapi/util/jarak_widget.dart';
 
-class SendVerification extends StatefulWidget {
-  const SendVerification({Key? key}) : super(key: key);
+class EditProfilePage extends StatefulWidget {
+  final String? userName, uid;
+  const EditProfilePage({required this.userName, required this.uid, Key? key})
+      : super(key: key);
 
   @override
-  State<SendVerification> createState() => _SendVerificationState();
+  State<EditProfilePage> createState() => _EditProfilePageState();
 }
 
-class _SendVerificationState extends State<SendVerification> {
+class _EditProfilePageState extends State<EditProfilePage> {
   final TextEditingController _controller = TextEditingController();
-
-  String? errorMessage = '';
-
-  Future<void> sendEmailVerification() async {
-    try {
-      await Auth().sendEmailVerification(
-        email: _controller.text,
-      );
-    } on FirebaseAuthException catch (e) {
-      setState(() {
-        errorMessage = e.message;
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,33 +32,40 @@ class _SendVerificationState extends State<SendVerification> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text(
-                      "Email Belum di Verifikasi",
+                      "Edit Profile",
                       style: TextStyle(
                           fontFamily: "poppins",
                           fontSize: 20.0,
                           fontWeight: FontWeight.bold,
                           color: Colors.white),
                     ),
-                    smallVerticalGap,
-                    const Text(
-                      "Silahkan verifikasi email anda agar dapat menggunakan lemari rapi. Silahkan cek di kotak email anda.",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontFamily: "poppins",
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white),
-                    ),
+                    mediumVerticalGap,
+                    InputLogin(
+                        controller: _controller,
+                        hintText: widget.userName!,
+                        isPassword: false),
                     mediumVerticalGap,
                     SizedBox(
                       height: 54.0,
-                      child: tombolPilihan("Kirim ulang", () async {
-                        await sendEmailVerification();
-                        await Auth().currentUser?.reload();
+                      child: tombolPilihan("Simpan", () async {
+                        await FirestoreService()
+                            .editProfile(widget.uid!, _controller.text);
                       }),
                     ),
                   ],
                 )),
+            Align(
+              alignment: Alignment.topLeft,
+              child: IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: const Icon(
+                    Icons.arrow_back_rounded,
+                    color: Colors.white,
+                    size: 50.0,
+                  )),
+            ),
           ],
         ),
       ),

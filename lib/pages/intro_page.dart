@@ -46,9 +46,12 @@ class IntroPage extends StatelessWidget {
                                         color: Colors.blue),
                                   )),
                                 ),
-                                SizedBox(
-                                    width: 320,
-                                    child: Image.asset("images/cloud.png"))
+                                Align(
+                                  alignment: Alignment.topCenter,
+                                  child: SizedBox(
+                                      height: 300,
+                                      child: Image.asset("images/cloud.png")),
+                                )
                               ],
                             ),
                             const Padding(

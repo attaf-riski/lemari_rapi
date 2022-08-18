@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lemarirapi/util/jarak_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:lemarirapi/auth.dart';
+import 'package:lemarirapi/services/auth.dart';
 
 class ForgetPassword extends StatefulWidget {
   const ForgetPassword({Key? key}) : super(key: key);

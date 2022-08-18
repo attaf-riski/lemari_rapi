@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+Widget miniVerticalGap = const SizedBox(
+  height: 10.0,
+);
+
 Widget smallVerticalGap = const SizedBox(
   height: 20.0,
 );
