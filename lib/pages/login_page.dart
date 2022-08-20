@@ -1,9 +1,9 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:lemarirapi/util/jarak_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:lemarirapi/services/auth.dart';
+
+/// Halaman login
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -16,8 +16,11 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
 
+  /// Menampung pesan error firebase
   String? errorMessage = '';
 
+  /// Methode dari Firebase yang kemudian disederhanakan pemanggilannya
+  /// agar bagian service tidak bergabung dengan UI
   Future<void> signInWithEmailAndPassword() async {
     try {
       await Auth()
@@ -27,6 +30,7 @@ class _LoginPageState extends State<LoginPage> {
       )
           .then((value) {
         setState(() {
+          /// Jika tidak ada error
           errorMessage = '';
         });
       });
@@ -105,6 +109,9 @@ class _LoginPageState extends State<LoginPage> {
                       child: tombolPilihan("Login", () async {
                         await signInWithEmailAndPassword().then((value) {
                           if (errorMessage == '') {
+                            /// Apabila tidak ada error firebase maka akan direfresh
+                            /// untuk melihat status user
+                            /// apakah telah login
                             Navigator.pushNamedAndRemoveUntil(
                                 context, '/', (route) => false);
                           }
@@ -138,6 +145,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  /// agar tidak terjadi data leak
   @override
   void dispose() {
     _controllerEmail.dispose();

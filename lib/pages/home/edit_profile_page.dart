@@ -2,17 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:lemarirapi/services/firestore_services.dart';
 import 'package:lemarirapi/util/jarak_widget.dart';
 
-class EditProfilePage extends StatefulWidget {
+/// Hanya mengganti userName user
+class EditProfilePage extends StatelessWidget {
+  EditProfilePage({Key? key, this.userName, this.uid}) : super(key: key);
+
+  /// data yang perlu dikirim dari profile utama
   final String? userName, uid;
-  const EditProfilePage({required this.userName, required this.uid, Key? key})
-      : super(key: key);
-
-  @override
-  State<EditProfilePage> createState() => _EditProfilePageState();
-}
-
-class _EditProfilePageState extends State<EditProfilePage> {
   final TextEditingController _controller = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,14 +39,15 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     mediumVerticalGap,
                     InputLogin(
                         controller: _controller,
-                        hintText: widget.userName!,
+                        hintText: userName!,
                         isPassword: false),
                     mediumVerticalGap,
                     SizedBox(
                       height: 54.0,
                       child: tombolPilihan("Simpan", () async {
+                        /// terhubung dengan firestore
                         await FirestoreService()
-                            .editProfile(widget.uid!, _controller.text);
+                            .editProfile(uid!, _controller.text);
                       }),
                     ),
                   ],

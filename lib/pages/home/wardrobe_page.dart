@@ -6,6 +6,9 @@ import 'package:lemarirapi/services/auth.dart';
 import 'package:lemarirapi/services/firestore_services.dart';
 import 'package:lemarirapi/util/jarak_widget.dart';
 
+/// Halaman lemari
+/// Menggunakan FutureBuilder untuk mendapatkan user
+/// Menggunakan Stream untuk mendapatkan user data di firestore
 class WardrobePage extends StatefulWidget {
   const WardrobePage({Key? key}) : super(key: key);
 
@@ -24,10 +27,12 @@ class _WardrobePageState extends State<WardrobePage> {
                   stream: FirestoreService().getMyClothes(snapshot.data!.uid!),
                   builder: (BuildContext context,
                       AsyncSnapshot<QuerySnapshot> docSnapshot) {
+                    /// jika docSnapshot ada error
                     if (docSnapshot.hasError) {
-                      return const Text('Something went wrong');
+                      return const Text('Terjadi Kesalahan');
                     }
 
+                    /// jika docSnapshot sedang menunggu
                     if (docSnapshot.connectionState ==
                         ConnectionState.waiting) {
                       return const SizedBox(
@@ -42,8 +47,11 @@ class _WardrobePageState extends State<WardrobePage> {
                       );
                     }
 
+                    /// jika docSnapshot sudah ada data
                     if (docSnapshot.hasData) {
                       QuerySnapshot data = docSnapshot.data!;
+
+                      /// jika user belum menambahkan pakaian
                       if (data.docs.toString() == '[]') {
                         return const SizedBox(
                           width: double.infinity,
@@ -71,8 +79,10 @@ class _WardrobePageState extends State<WardrobePage> {
                           ),
                           itemCount: data.size,
                           itemBuilder: (BuildContext context, int index) {
-                            // dapatin data berdasarkan index
+                            /// dapatin data berdasarkan index
                             var currentCloth = data.docs.elementAt(index);
+
+                            /// Mapping data per pakaian ke dalam tiap kartu
                             return cardClothe(
                                 nameCloth: currentCloth['clotheName'],
                                 idCloth: currentCloth['clotheId'],
@@ -147,7 +157,10 @@ class _WardrobePageState extends State<WardrobePage> {
                         'images/hoodie.png',
                         fit: BoxFit.contain,
                       )
-                    : Image.network(imageURL),
+                    : Image.network(
+                        imageURL,
+                        fit: BoxFit.cover,
+                      ),
               ),
               miniVerticalGap,
               Text(

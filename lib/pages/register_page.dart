@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lemarirapi/services/auth.dart';
@@ -16,8 +14,10 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
 
+  /// tampungan pesan error firebase
   String? errorMessage = '';
 
+  /// memisahkan service dengan UI
   Future<void> createUserWithEmailAndPassword() async {
     try {
       await Auth()
@@ -26,15 +26,15 @@ class _RegisterPageState extends State<RegisterPage> {
         password: _controllerPassword.text,
       )
           .then((value) {
+        /// tidak ada error
         setState(() {
-          errorMessage = "Daftar berhasil, silahkan login.";
+          errorMessage = '';
         });
       });
       await Auth().currentUser?.reload();
     } on FirebaseAuthException catch (e) {
       setState(() {
         errorMessage = e.message;
-        log(errorMessage.toString());
       });
     }
   }
@@ -47,7 +47,6 @@ class _RegisterPageState extends State<RegisterPage> {
     } on FirebaseAuthException catch (e) {
       setState(() {
         errorMessage = e.message;
-        log(errorMessage.toString());
       });
     }
   }
@@ -103,10 +102,14 @@ class _RegisterPageState extends State<RegisterPage> {
                   SizedBox(
                       height: 54.0,
                       child: tombolPilihan("Register", () async {
-                        // setelah membuat user baru maka kirimkan email verifikasi
+                        /// Apabila tidak ada error firebase maka akan direfresh
+                        /// untuk melihat status user
+                        /// apakah telah login
                         await createUserWithEmailAndPassword().then((value) {
-                          Navigator.pushNamedAndRemoveUntil(
-                              context, '/', (route) => false);
+                          if (errorMessage == '') {
+                            Navigator.pushNamedAndRemoveUntil(
+                                context, '/', (route) => false);
+                          }
                         });
                       })),
                   smallVerticalGap,
@@ -137,6 +140,7 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
+  /// agar tidak data leak
   @override
   void dispose() {
     _controllerEmail.dispose();

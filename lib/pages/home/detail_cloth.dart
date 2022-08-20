@@ -4,7 +4,9 @@ import 'package:lemarirapi/services/firebase_storage.dart';
 import 'package:lemarirapi/services/firestore_services.dart';
 import 'package:lemarirapi/util/jarak_widget.dart';
 
+/// Menggunakan Streambuilder
 class DetailCloth extends StatefulWidget {
+  /// ada data yang dikirim dari wardrobe utama
   final String uid;
   final int clotheIndex;
   const DetailCloth({Key? key, required this.uid, required this.clotheIndex})
@@ -15,6 +17,7 @@ class DetailCloth extends StatefulWidget {
 }
 
 class _DetailClothState extends State<DetailCloth> {
+  /// Untuk nilai dari switch widget
   bool isAtWardrobeSwitchValue = false;
   bool isIronedSwitchValue = false;
   bool isWashedSwitchValue = false;
@@ -26,10 +29,12 @@ class _DetailClothState extends State<DetailCloth> {
           stream: FirestoreService().getMyClothes(widget.uid),
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> docSnapshot) {
+            /// Jika snaphot error
             if (docSnapshot.hasError) {
               return const Text('Something went wrong');
             }
 
+            /// Jika snaphot sedang menunggu data
             if (docSnapshot.connectionState == ConnectionState.waiting) {
               return const SizedBox(
                 width: double.infinity,
@@ -42,9 +47,13 @@ class _DetailClothState extends State<DetailCloth> {
                 )),
               );
             }
+
+            /// Jika snaphot sudah ada data
             QuerySnapshot data = docSnapshot.data!;
+
+            /// Mapping data pakaian sesuai index yang dikirim dari wardrobe utama
             var currentClothData = data.docs.elementAt(widget.clotheIndex);
-            //  atur keadaan pakaian sekarang
+            //  atur keadaan pakaian sekarang mengikuti data di firestore
             isAtWardrobeSwitchValue = currentClothData['isAtWardrobe'];
             isIronedSwitchValue = currentClothData['isIroned'];
             isWashedSwitchValue = currentClothData['isWashed'];
@@ -64,7 +73,10 @@ class _DetailClothState extends State<DetailCloth> {
                                   "images/hoodie.png",
                                   fit: BoxFit.cover,
                                 )
-                              : Image.network(currentClothData['imageURL']),
+                              : Image.network(
+                                  currentClothData['imageURL'],
+                                  fit: BoxFit.cover,
+                                ),
                         ),
                         smallVerticalGap,
                         Text(
@@ -202,8 +214,11 @@ class _DetailClothState extends State<DetailCloth> {
                         SizedBox(
                             height: 54.0,
                             child: tombolPilihan("Hapus Pakaian", () async {
+                              /// Setelah pakaian dihapus maka juga akan keluar detail pakaian
                               FirestoreService().deleteClothe(
                                   widget.uid, currentClothData['clotheId']);
+
+                              /// hapus juga gambar di storage firebase
                               await FirebaseStorageLocal()
                                   .deleteFile(currentClothData['clotheId'])
                                   .then((value) => Navigator.pop(context));

@@ -1,3 +1,4 @@
+// mapping
 class Clothes {
   final bool? isWashed, isAtWardrobe, isIroned;
   final String? clotheName, description, clotheId, clotheImageURL;

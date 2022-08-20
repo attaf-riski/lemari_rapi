@@ -8,6 +8,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:lemarirapi/widget_tree.dart';
 
 Future<void> main() async {
+  /// Karena projek ini ada firebase maka ditambah 2 baris dibawah ini
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(const MyApp());
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: {
-        '/': (context) => const WidgetTree(),
+        '/': (context) => WidgetTree(),
         '/login': (context) => const LoginPage(),
         '/register': (context) => const RegisterPage(),
         '/sendverif': (context) => const SendVerification(),

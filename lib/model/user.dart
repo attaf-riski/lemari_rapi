@@ -1,3 +1,6 @@
+import 'package:lemarirapi/model/clothes.dart';
+
+/// mapping
 class UserLocal {
   final String? uid;
   final bool? isVerified;
@@ -7,9 +10,9 @@ class UserLocal {
 class UserData {
   final String? userName, imageURL;
   // berisikan id baju
-  final myClothes;
+  final List<Clothes> myClothes;
 
-  UserData({this.userName, this.imageURL, this.myClothes});
+  UserData({this.userName, this.imageURL, required this.myClothes});
 
   static UserData fromMap({required Map<dynamic, dynamic> map}) {
     return UserData(

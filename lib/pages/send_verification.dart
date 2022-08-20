@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:lemarirapi/services/auth.dart';
 import 'package:lemarirapi/util/jarak_widget.dart';
 
+/// COMING SOON, INSHAALLAH ditambahkan di project untuk pengiriman verifikasi email
+/// saat ini belum diperllukan
 class SendVerification extends StatefulWidget {
   const SendVerification({Key? key}) : super(key: key);
 

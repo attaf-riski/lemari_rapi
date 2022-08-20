@@ -4,14 +4,17 @@ class FirestoreService {
   final CollectionReference _myClothes =
       FirebaseFirestore.instance.collection("users");
 
+  /// dapatkan user data sekarang
   Stream<DocumentSnapshot> getMyClothe(String uid) {
     return _myClothes.doc(uid).snapshots();
   }
 
+  /// dapatkan koleksi baju
   Stream<QuerySnapshot> getMyClothes(String uid) {
     return _myClothes.doc(uid).collection("myClothes").snapshots();
   }
 
+  /// mengedit pakaian
   Future<void> editClothe(
       String uid, String clotheId, String whichField, bool value) async {
     return await _myClothes
@@ -21,10 +24,12 @@ class FirestoreService {
         .update({whichField: value});
   }
 
+  /// mengedit profile
   Future<void> editProfile(String uid, String name) async {
     return await _myClothes.doc(uid).update({'userName': name});
   }
 
+  /// hapus pakaian
   void deleteClothe(String uid, String clotheId) async {
     return await _myClothes
         .doc(uid)
@@ -33,6 +38,7 @@ class FirestoreService {
         .delete();
   }
 
+  /// menambahkan pakaian
   Future<void> addClothe({
     required String uid,
     required String clotheName,
@@ -52,9 +58,5 @@ class FirestoreService {
       'isWashed': isWashed,
       'isIroned': isIroned
     });
-  }
-
-  String clotheId(String uid) {
-    return _myClothes.doc(uid).collection("myClothes").id;
   }
 }

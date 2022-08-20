@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lemarirapi/save_setting.dart';
 
+/// Hanya halaman intro yang berisikan UI
+
 class IntroPage extends StatelessWidget {
   const IntroPage({Key? key}) : super(key: key);
 

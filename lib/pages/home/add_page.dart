@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:lemarirapi/model/user.dart';
@@ -8,6 +7,7 @@ import 'package:lemarirapi/services/firestore_services.dart';
 import 'package:lemarirapi/services/imagepicker.dart';
 import 'package:lemarirapi/util/jarak_widget.dart';
 
+/// Menambahk pakaian baru
 class AddClothe extends StatefulWidget {
   const AddClothe({Key? key}) : super(key: key);
 
@@ -45,13 +45,19 @@ class _AddClotheState extends State<AddClothe> {
                           "images/hoodie.png",
                           fit: BoxFit.cover,
                         )
-                      : Image.file(image!),
+                      : Image.file(
+                          image!,
+                          fit: BoxFit.cover,
+                        ),
                 ),
                 smallVerticalGap,
                 SizedBox(
                     height: 54.0,
                     child: tombolPilihan("Pilih gambar", () async {
+                      /// Mengambil gambar pakaian dari galeri
                       image = await ImagePickerLocal().pickUploudImage();
+
+                      /// refresh
                       setState(() {});
                     })),
 
@@ -112,7 +118,6 @@ class _AddClotheState extends State<AddClothe> {
                             value: isIronedSwitchValue,
                             onChanged: (value) {
                               setState(() {
-                                log("pencet");
                                 isIronedSwitchValue = !isIronedSwitchValue;
                               });
                             })
@@ -168,12 +173,19 @@ class _AddClotheState extends State<AddClothe> {
                 SizedBox(
                     height: 54.0,
                     child: tombolPilihan("Tambah Pakaian", () async {
+                      /// fungsi uploud
+                      /// dapatkan dulu current user
                       UserLocal currentUser = await getCurrentUser();
+
+                      /// id baju didapatkan dari timestap epoch saat disubmit
                       var clotheId =
                           DateTime.now().millisecondsSinceEpoch.toString();
+
+                      /// penyimpanan firebase storage lalu dapatkan linknya
                       var imageURL =
                           await FirebaseStorageLocal().putFile(image, clotheId);
-                      log(imageURL);
+
+                      /// proses uploud
                       await FirestoreService()
                           .addClothe(
                               uid: currentUser.uid!,
@@ -185,6 +197,7 @@ class _AddClotheState extends State<AddClothe> {
                               isIroned: isIronedSwitchValue,
                               isAtWardrobe: isAtWardrobeSwitchValue)
                           .then((value) {
+                        /// jika berhasil maka set semuanya ulang
                         setState(() {
                           image = null;
                           _controllerClotheName.text =

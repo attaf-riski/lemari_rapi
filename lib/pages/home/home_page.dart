@@ -3,6 +3,7 @@ import 'package:lemarirapi/pages/home/add_page.dart';
 import 'package:lemarirapi/pages/home/profile_page.dart';
 import 'package:lemarirapi/pages/home/wardrobe_page.dart';
 
+/// Halaman ini berfungsi sebagai wadah utama bottom navigator
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -13,6 +14,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int currentIndex = 0;
 
+  /// list halaman untuk berpindah
   final List<Widget> _pages = <Widget>[
     const WardrobePage(),
     const AddClothe(),
@@ -56,6 +58,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+// mengganti nilai currentIndex dengan value yang disentuh user
   void onTapEvent(int value) {
     setState(() {
       currentIndex = value;

@@ -6,12 +6,13 @@ import 'package:lemarirapi/model/user.dart';
 class Auth {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   User? get currentUser => _firebaseAuth.currentUser;
-
+  // stream perubahan data user
   Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
 
   final CollectionReference _myClothes =
       FirebaseFirestore.instance.collection("users");
 
+  /// mendapatkan urrent user tapi dengan model custom
   Future<UserLocal> getCurrentUser() async {
     var buffer = UserLocal(
       uid: currentUser?.uid,
@@ -20,6 +21,7 @@ class Auth {
     return buffer;
   }
 
+  /// sign in dengan email dan password
   Future<void> signInWithEmailAndPassword({
     required String email,
     required String password,
@@ -30,6 +32,7 @@ class Auth {
     );
   }
 
+  /// membuat user baru
   Future<void> createUserWithEmailAndPassword({
     required String email,
     required String password,
@@ -40,6 +43,7 @@ class Auth {
       password: password,
     )
         .then((value) {
+      /// jika berhasil buat juga data di firestore
       _myClothes
           .doc(value.user?.uid)
           .set({'userName': 'Masukan nama', 'imageURL': ''});
@@ -47,10 +51,12 @@ class Auth {
     });
   }
 
+  /// keluar
   Future<void> signOut() async {
     await _firebaseAuth.signOut();
   }
 
+  /// data send reset tadinya
   var acs = ActionCodeSettings(
       url: 'https://lemarirapi-aee5e.firebaseapp.com',
       handleCodeInApp: true,
@@ -59,14 +65,17 @@ class Auth {
       androidInstallApp: true,
       androidMinimumVersion: '19');
 
+  /// COMING SOON
   Future<void> sendEmailVerification({required String email}) async {
     currentUser?.sendEmailVerification();
   }
 
+  /// kirim reset password ke email
   Future<void> sendResetPassword({required String email}) async {
     await _firebaseAuth.sendPasswordResetEmail(email: email);
   }
 
+  /// COMING SOON
   Future<void> updatePassword({required String password}) async {
     await currentUser?.updatePassword(password);
   }

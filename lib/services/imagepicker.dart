@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 
 class ImagePickerLocal {
+  /// Mengambil pakaian dari galeri
+  /// kualitas diturunkan
   Future pickUploudImage() async {
     final image = await ImagePicker().pickImage(
         source: ImageSource.gallery,

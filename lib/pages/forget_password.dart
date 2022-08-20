@@ -3,6 +3,7 @@ import 'package:lemarirapi/util/jarak_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:lemarirapi/services/auth.dart';
 
+/// Jika lupa password maka bisa lewat halaman ini
 class ForgetPassword extends StatefulWidget {
   const ForgetPassword({Key? key}) : super(key: key);
 
@@ -13,6 +14,7 @@ class ForgetPassword extends StatefulWidget {
 class _ForgetPasswordState extends State<ForgetPassword> {
   final TextEditingController _controller = TextEditingController();
 
+  /// seperti catatan login dan register
   String? errorMessage = '';
 
   Future<void> sendResetPassword() async {
@@ -72,6 +74,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                     SizedBox(
                       height: 54.0,
                       child: tombolPilihan("Kirim Link", () async {
+                        /// fungsi utama
                         await sendResetPassword();
                       }),
                     ),
